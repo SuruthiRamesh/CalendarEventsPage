@@ -412,13 +412,6 @@ class Calender extends State<CalenderScreen> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Center(
-                  child: Container(
-                      child: new Text('$_subjectText',style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),)),
-                ),
                 content: Container(
                   height: 300,
                   width: 400,
@@ -426,39 +419,77 @@ class Calender extends State<CalenderScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Column(children: [
-                            Text('$_id',style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                            ),)
-                          ],),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Title :',style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),),
+                              Text('$_subjectText',style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                              ),),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('$_notesText',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                ),),
                               Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text('Description :',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),),
+                                  Text('$_notesText',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20,
+                                    ),),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Date :',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
                                   Text(
                                     '$_dateText',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 20,
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text('$_startTimeText : $_endTimeText',style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20,
-                              ),),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('Time :',style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),),
+                                  Text('$_startTimeText : $_endTimeText',style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20,
+                                  ),),
+                                ],
+                              ),
                             ],
                           ),
                         ],
