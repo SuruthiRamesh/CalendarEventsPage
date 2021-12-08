@@ -13,7 +13,7 @@ class Events {
   DateTime eventdate;
 
 
-  Events();
+  Events({this.eventdate,this.style,this.uuid,this.sync,this.shared,this.images,this.createdAt,this.Background,this.Description,this.Color,this.id});
 
   Events.fromMap(Map<String, dynamic> json){
     id= json["id"];
@@ -27,7 +27,7 @@ class Events {
     sync= json['sync'];
     createdAt = DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int);
     eventdate = DateTime.fromMillisecondsSinceEpoch(json['eventdate'] as int);
-}
+  }
   toMap(){
     return {
       "id": id,

@@ -41,6 +41,8 @@ dependencies:
   page_turn: ^1.0.1
   sqflite: any
   flutter_colorpicker: ^1.0.2
+  speed_dial_fab: ^2.1.1
+  flutter_speed_dial: ^4.6.6
 
 
 dev_dependencies:

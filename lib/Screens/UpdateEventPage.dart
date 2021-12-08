@@ -13,16 +13,15 @@ import 'package:formspage/Helper/DatabaseHelper.dart';
 import 'package:formspage/models/Event.dart';
 import 'package:formspage/Screens/ListPage.dart';
 
-class MyDiary extends StatefulWidget {
-  final Events events;
-
-  // ignore: use_key_in_widget_constructors
-  const MyDiary({this.events});
+class UpdateDiary extends StatefulWidget {
+  int updateid,updatesync,updateshared,updatecolor;
+  String updatedescription,updateimages,updatestyle,updatebackground,updateuuid,updatecreatetime,updatedatetime;
+  UpdateDiary(this.updateid,this.updatedatetime,this.updatedescription,this.updatebackground,this.updatecolor,this.updatecreatetime,this.updateimages,this.updateshared,this.updatestyle,this.updatesync,this.updateuuid);
   @override
-  _MyDiaryState createState() => _MyDiaryState();
+  _UpdateDiaryState createState() => _UpdateDiaryState();
 }
 
-class _MyDiaryState extends State<MyDiary> {
+class _UpdateDiaryState extends State<UpdateDiary> {
   List<Events> eventList = [];
   DataBaseHelper dataBaseHelper;
   File _storedImage;
@@ -35,9 +34,9 @@ class _MyDiaryState extends State<MyDiary> {
   var imgPicker;
   // ignore: non_constant_identifier_names
   String pic = "assets/background1.jpg";
-  TextEditingController descriptioncontroller = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController fontscontroller = TextEditingController();
+  TextEditingController updatedescriptioncontroller = TextEditingController();
+  TextEditingController updatedateController = TextEditingController();
+  TextEditingController updatefontscontroller = TextEditingController();
   final formkey = GlobalKey<FormState>();
   Color _color;
   int colorcode;
@@ -49,29 +48,41 @@ class _MyDiaryState extends State<MyDiary> {
   var sync =1;
   DateTime creation;
   DateTime datetobeset;
+  void updatesEvents(){
+    dataBaseHelper.update(Events(
+      id: widget.updateid,
+      shared: widget.updateshared,
+      sync: widget.updatesync,
+      style: widget.updatestyle,
+      images: widget.updateimages,
+      uuid: widget.updateuuid,
+      createdAt: DateFormat('MMMM dd, yyyy').parse(widget.updatecreatetime),
+      eventdate: DateFormat('MMMM dd, yyyy').parse(widget.updatedatetime),
+      Color: widget.updatecolor,
+      Description: widget.updatedescription,
+      Background: widget.updatebackground
+    ));
+  }
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    descriptioncontroller =TextEditingController();
-    dateController = TextEditingController();
-    fontscontroller = TextEditingController();
+    dataBaseHelper = DataBaseHelper();
+    updatedescriptioncontroller = TextEditingController();
+    updatedateController = TextEditingController();
+    updatefontscontroller = TextEditingController();
+    setState(() {
+      updatefontscontroller.text = widget.updatestyle;
+      updatedescriptioncontroller.text = widget.updatedescription;
+      updatedateController.text = widget.updatedatetime;
+    });
+    colorcode = widget.updatecolor;
+    _color = Color(widget.updatecolor);
     creation = DateTime.now();
     datetobeset = DateTime.now();
     imgPicker = ImagePicker();
-    dateController.text = DateFormat('MMM dd yyyy').format(datetobeset).toString();
-    fontscontroller.text = 'Auto';
-    if (widget.events.id != null){
-      descriptioncontroller.text = widget.events.Description;
-      fontscontroller.text = widget.events.style;
-      colorcode = widget.events.Color;
-      pic = widget.events.Background;
-      uuid = widget.events.uuid;
-      imageused = widget.events.images;
-      shared = widget.events.shared;
-      sync = widget.events.sync;
-      creation =widget.events.createdAt;
-      datetobeset = widget.events.eventdate;
-    }
+    updatedateController.text = widget.updatedatetime;
+    updatefontscontroller.text = widget.updatestyle;
+    _storedImage = File(widget.updateimages);
   }
   @override
   Widget build(BuildContext context) {
@@ -80,7 +91,7 @@ class _MyDiaryState extends State<MyDiary> {
         leading: IconButton(icon:const Icon(Icons.arrow_back,color: Colors.indigo,size: 30),onPressed: (){
           Navigator.pop(context);
         },),
-        title: Text('ADD',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+        title: Text('Update',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
         elevation: 0,
         backgroundColor: Colors.white,
       ),
@@ -108,9 +119,12 @@ class _MyDiaryState extends State<MyDiary> {
                             height: 180,
                             width: 380,
                             child: TextField(
-                              controller: descriptioncontroller,
+                              onChanged: (value){
+                                widget.updatedescription = value;
+                              },
+                              controller: updatedescriptioncontroller,
                               maxLines: 20,
-                              style: TextStyle(color: _color,fontWeight: FontWeight.w400,fontFamily: fontName,fontSize: 20),
+                              style: TextStyle(color: Color(widget.updatecolor),fontWeight: FontWeight.w400,fontFamily: widget.updatestyle,fontSize: 20),
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.all(20),
@@ -118,7 +132,7 @@ class _MyDiaryState extends State<MyDiary> {
                             ),
                             decoration: BoxDecoration(
                                 image: DecorationImage(fit: BoxFit.cover,
-                                  image: AssetImage(pic),
+                                  image: AssetImage(widget.updatebackground),
                                 ),
                                 borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                                 color: Colors.black
@@ -127,10 +141,13 @@ class _MyDiaryState extends State<MyDiary> {
                           const SizedBox(height: 20),
                           const Text('Time & Date',style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.w600),),
                           TextField(
+                            onChanged: (value){
+                              widget.updatedatetime = value;
+                            },
                               showCursor: false,
                               readOnly: true,
                               onTap: () => _selectDate(),
-                              controller: dateController,
+                              controller: updatedateController,
                               style: const TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.w600),
                               decoration: const InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
@@ -151,7 +168,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   setState(() {
                                     _color = values;
                                     print(_color);
-                                    colorcode = _color.value;
+                                    widget.updatecolor = _color.value;
                                     print(colorcode);
                                   });
                                 },
@@ -166,7 +183,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   Color(0xFF616161),
                                   Color(0xFFCFD8DC),
                                 ],
-                                initialColor: Color(0xFF1976D2)),
+                                initialColor: Color(widget.updatecolor)),
                           ),
                           const SizedBox(height: 20),
                           const Text('Fonts',style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.w600),),
@@ -175,7 +192,7 @@ class _MyDiaryState extends State<MyDiary> {
                               Expanded(
                                   child: TextField(
                                     readOnly: true,
-                                    controller: fontscontroller,
+                                    controller: updatefontscontroller,
                                     style:const TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.w600),
                                     decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
@@ -186,13 +203,13 @@ class _MyDiaryState extends State<MyDiary> {
                                       ),
                                     ),
                                     onChanged: (value){
-                                      fontscontroller.text = value;
+                                      widget.updatestyle = value;
                                     },
                                   )),
                               PopupMenuButton<String>(
                                 icon: const Icon(Icons.arrow_drop_down,color: Colors.grey),
                                 onSelected: (String value) {
-                                  fontscontroller.text = value;
+                                  widget.updatestyle = value;
                                   if(value == "Cursive"){
                                     setState(() {
                                       fontName = "CedarvilleCursive";
@@ -210,7 +227,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   }
                                   else if(value == "Cancel"){
                                     setState(() {
-                                      fontscontroller.text ="Auto";
+                                      updatefontscontroller.text ="Auto";
                                       fontName = "";
                                     });
                                   }
@@ -239,7 +256,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   child: TextButton(
                                       onPressed: (){
                                         setState(() {
-                                          pic = "assets/background1.jpg";
+                                          widget.updatebackground = "assets/background1.jpg";
                                         });
                                       },
                                       child: Image.asset("assets/background1.jpg")),
@@ -250,7 +267,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   child: TextButton(
                                       onPressed: (){
                                         setState(() {
-                                          pic = "assets/background2.jpg";
+                                          widget.updatebackground = "assets/background2.jpg";
                                         });
                                       },
                                       child: Image.asset("assets/background2.jpg")),
@@ -261,7 +278,7 @@ class _MyDiaryState extends State<MyDiary> {
                                   child: TextButton(
                                       onPressed: (){
                                         setState(() {
-                                          pic = "assets/background3.png";
+                                          widget.updatebackground = "assets/background3.png";
                                         });
                                       },
                                       child: Image.asset("assets/background3.png")),
@@ -304,12 +321,14 @@ class _MyDiaryState extends State<MyDiary> {
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   child: TextButton(child: Text(
-                                    'Add',
+                                    'Update',
                                     style: TextStyle(color: Colors.white,fontSize: 20.0),),onPressed: (){
-                                    add();
+                                    updatesEvents();
                                     _savetofile();
                                     refreshList();
-                                    Navigator.pop(context);
+                                    Navigator.push(context,
+                                      MaterialPageRoute(builder: (context)=> ListPage()),
+                                    );
                                   }),
                                 ),
                               ]
@@ -355,6 +374,8 @@ class _MyDiaryState extends State<MyDiary> {
               ),
               Expanded(
                 child: CupertinoDatePicker(
+                  initialDateTime: DateFormat('MMMM dd, yyyy').parse(widget.updatedatetime),
+                  maximumDate: DateTime.now(),
                   mode: CupertinoDatePickerMode.date,
                   onDateTimeChanged: (DateTime dateTime) {
                     tempPickedDate = dateTime;
@@ -368,8 +389,8 @@ class _MyDiaryState extends State<MyDiary> {
     );
     if (pickedDate != null && pickedDate != datetobeset) {
       setState(() {
-        datetobeset = pickedDate;
-        dateController.text = DateFormat('MMM dd yyyy').format(datetobeset).toString();
+        widget.updatedatetime = DateFormat('MMMM dd, yyyy').format(pickedDate);
+        updatedateController.text = DateFormat('MMMM dd, yyyy').format(pickedDate).toString();
       });
     }
   }
@@ -397,23 +418,6 @@ class _MyDiaryState extends State<MyDiary> {
     final savedImage = await File(_storedImage.path).copy('${temppath.path}/$filename$openfileextension');
     imageused = savedImage.path;
     print("$imageused");
-  }
-  Future<void> add()async{
-    DateTime creation = DateTime.now();
-    if (descriptioncontroller != null) {
-      widget.events.Description= descriptioncontroller.text;
-      widget.events.style = fontscontroller.text;
-      widget.events.Background = pic;
-      widget.events.images = imageused;
-      widget.events.createdAt = creation;
-      widget.events.eventdate = datetobeset;
-      widget.events.Color = colorcode;
-      widget.events.uuid = uuid;
-      widget.events.shared = shared;
-      widget.events.sync = sync;
-      await DataBaseHelper().Insert(widget.events);
-    }
-    refreshList();
   }
   Future<void> refreshList() async {
     List<Events> x = await DataBaseHelper().getList();
